@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@plugin "tailwindcss-animate";
+
+/* TAILWIND V4 THEME CONFIGURATION
+  This replaces the deleted tailwind.config.ts
+*/
+@theme {
+  --color-background: #F9FAFB;
+  --color-foreground: #111827;
+
+  --color-primary: #0B1320;
+  --color-primary-foreground: #FFFFFF;
+
+  --color-secondary: #D4A24C;
+  --color-secondary-foreground: #0B1320;
+
+  --color-accent: #F59E0B;
+  --color-accent-foreground: #FFFFFF;
+
+  --color-success: #16A34A;
+  --color-danger: #DC2626;
+
+  --color-muted: #F3F4F6;
+  --color-muted-foreground: #6B7280;
+
+  --color-border: #E5E7EB;
+  --color-input: #E5E7EB;
+  --color-ring: #D4A24C;
+
+  --font-heading: var(--font-playfair), serif;
+  --font-sans: var(--font-inter), sans-serif;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-premium: 0 10px 40px -10px rgba(11, 19, 32, 0.08);
+  --shadow-premium-hover: 0 20px 40px -10px rgba(212, 162, 76, 0.15);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --radius: 0.75rem;
+  }
+  
+  * {
+    border-color: var(--color-border);
+  }
+  
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Hide scrollbar for horizontal scrolling containers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
