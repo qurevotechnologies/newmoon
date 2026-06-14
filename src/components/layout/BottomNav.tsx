@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, ShoppingBag, User, Ticket } from "lucide-react";
+import { Home, Search, ShoppingBag, User, Info } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
@@ -14,7 +14,7 @@ export default function BottomNav() {
   const navItems = [
     { label: "Home", href: "/", icon: Home },
     { label: "Menu", href: "/menu", icon: Search },
-    { label: "Offers", href: "/offers", icon: Ticket },
+    { label: "About", href: "/about", icon: Info },
     { label: "Account", href: "/account", icon: User },
   ];
 

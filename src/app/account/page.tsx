@@ -25,7 +25,8 @@ const ORDER_HISTORY = [
 
 export default function AccountPage() {
   return (
-    <div className="min-h-screen bg-background pb-32 md:pb-12 pt-4">
+    // UPDATED HERE: Changed pt-4 to pt-24 md:pt-32 to push content below the fixed navbar
+    <div className="min-h-screen bg-background pb-32 md:pb-12 pt-24 md:pt-32">
       <div className="container mx-auto px-4 max-w-3xl">
         
         {/* Profile Card (No Profile Image) */}
@@ -104,7 +105,7 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Quick Links Grid (Removed Payment Methods) */}
+        {/* Quick Links Grid */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           {[
             { icon: MapPin, title: "Saved Addresses", desc: "2 Addresses" },
