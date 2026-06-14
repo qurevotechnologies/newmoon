@@ -22,18 +22,17 @@ export default function Navbar() {
   // Hide global navbar in admin panel
   if (pathname.startsWith('/admin')) return null;
 
-  // The custom Cart button injected into PillNav
   const cartButton = (
     <button 
       onClick={() => setIsCartOpen(true)}
-      className="relative hidden md:flex w-10 h-10 rounded-full bg-secondary text-primary items-center justify-center hover:bg-secondary/90 transition-transform active:scale-95 shadow-sm"
+      className="relative hidden md:flex w-10 h-10 rounded-full bg-primary text-white items-center justify-center hover:bg-primary/90 transition-transform active:scale-95 shadow-md"
     >
       <ShoppingBag size={18} strokeWidth={2.5} />
       <AnimatePresence>
         {cartCount > 0 && (
           <motion.span 
             initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-            className="absolute -top-1 -right-1 bg-white text-primary text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm"
+            className="absolute -top-1 -right-1 bg-secondary text-primary text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm"
           >
             {cartCount}
           </motion.span>
@@ -50,14 +49,14 @@ export default function Navbar() {
         items={[
           { label: 'Home', href: '/' },
           { label: 'Menu', href: '/menu' },
-          { label: 'Offers', href: '/offers' },
+          { label: 'About', href: '/about' }, // <-- Replaced Offers with About
           { label: 'Account', href: '/account' }
         ]}
         activeHref={pathname}
-        baseColor="rgba(11, 19, 32, 0.7)" // Primary Navy (Translucent for glass effect)
-        pillColor="#D4A24C" // Secondary Gold
+        baseColor="rgba(243, 244, 246, 0.5)" 
+        pillColor="#D4A24C" 
         hoveredPillTextColor="#0B1320" 
-        pillTextColor="#FFFFFF"
+        pillTextColor="#111827" 
         actionNode={cartButton}
       />
 

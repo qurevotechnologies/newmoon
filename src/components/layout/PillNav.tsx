@@ -24,7 +24,7 @@ interface PillNavProps {
   pillTextColor?: string;
   onMobileMenuClick?: () => void;
   initialLoadAnimation?: boolean;
-  actionNode?: ReactNode; // Added to seamlessly embed the Cart Button
+  actionNode?: ReactNode;
 }
 
 export default function PillNav({
@@ -34,15 +34,14 @@ export default function PillNav({
   activeHref,
   className = '',
   ease = 'power3.easeOut',
-  baseColor = '#0B1320',
-  pillColor = '#D4A24C',
-  hoveredPillTextColor = '#0B1320',
-  pillTextColor,
+  baseColor = 'transparent', 
+  pillColor = '#D4A24C', // Gold highlight
+  hoveredPillTextColor = '#ffffff', // White text on gold pill
+  pillTextColor = '#111827', // Dark gray text on white nav
   onMobileMenuClick,
   initialLoadAnimation = true,
   actionNode
 }: PillNavProps) {
-  const resolvedPillTextColor = pillTextColor ?? '#FFFFFF';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -54,8 +53,23 @@ export default function PillNav({
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navItemsRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
+  
+  // Ref for the continuous neon gradient
+  const neonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // 1. Start continuous neon flow rotation
+    if (neonRef.current) {
+      gsap.set(neonRef.current, { xPercent: -50, yPercent: -50 });
+      gsap.to(neonRef.current, {
+        rotation: 360,
+        repeat: -1,
+        duration: 4,
+        ease: "none" // Linear continuous spin
+      });
+    }
+
+    // 2. Existing layout setup
     const layout = () => {
       circleRefs.current.forEach(circle => {
         if (!circle?.parentElement) return;
@@ -199,81 +213,90 @@ export default function PillNav({
     '--base': baseColor,
     '--pill-bg': pillColor,
     '--hover-text': hoveredPillTextColor,
-    '--pill-text': resolvedPillTextColor
+    '--pill-text': pillTextColor
   } as React.CSSProperties;
 
   return (
     <div className="pill-nav-container">
-      <nav className={`pill-nav ${className}`} aria-label="Primary" style={cssVars}>
-        <Link
-          className="pill-logo"
-          href={items[0]?.href || '/'}
-          aria-label="Home"
-          onMouseEnter={handleLogoEnter}
-          role="menuitem"
-          ref={logoRef as any}
-        >
-          <img src={logo} alt={logoAlt} ref={logoImgRef} />
-        </Link>
+      
+      {/* Wrapper containing the neon glow + the inner pill nav */}
+      <div className="neon-wrapper" style={cssVars}>
+        
+        {/* Animated Gradient */}
+        <div className="neon-flow" ref={neonRef} />
 
-        <div className="pill-nav-items desktop-only" ref={navItemsRef}>
-          <ul className="pill-list" role="menubar">
-            {items.map((item, i) => (
-              <li key={item.href || `item-${i}`} role="none">
-                {isExternalLink(item.href) ? (
-                  <a
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                  >
-                    <span className="hover-circle" aria-hidden="true" ref={el => { circleRefs.current[i] = el; }} />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
-                    </span>
-                  </a>
-                ) : (
-                  <Link
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                  >
-                    <span className="hover-circle" aria-hidden="true" ref={el => { circleRefs.current[i] = el; }} />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
-                    </span>
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <nav className={`pill-nav ${className}`} aria-label="Primary">
+          <Link
+            className="pill-logo"
+            href={items[0]?.href || '/'}
+            aria-label="Home"
+            onMouseEnter={handleLogoEnter}
+            role="menuitem"
+            ref={logoRef as any}
+          >
+            <img src={logo} alt={logoAlt} ref={logoImgRef} />
+          </Link>
 
-        {/* Injected Action Node (e.g., Cart Button) */}
-        {actionNode && (
-          <div className="ml-2 mr-2 flex items-center h-full">
-            {actionNode}
+          <div className="pill-nav-items desktop-only" ref={navItemsRef}>
+            <ul className="pill-list" role="menubar">
+              {items.map((item, i) => (
+                <li key={item.href || `item-${i}`} role="none">
+                  {isExternalLink(item.href) ? (
+                    <a
+                      role="menuitem"
+                      href={item.href}
+                      className={`pill${activeHref === item.href ? ' is-active' : ''}`}
+                      aria-label={item.ariaLabel || item.label}
+                      onMouseEnter={() => handleEnter(i)}
+                      onMouseLeave={() => handleLeave(i)}
+                    >
+                      <span className="hover-circle" aria-hidden="true" ref={el => { circleRefs.current[i] = el; }} />
+                      <span className="label-stack">
+                        <span className="pill-label">{item.label}</span>
+                        <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      role="menuitem"
+                      href={item.href}
+                      className={`pill${activeHref === item.href ? ' is-active' : ''}`}
+                      aria-label={item.ariaLabel || item.label}
+                      onMouseEnter={() => handleEnter(i)}
+                      onMouseLeave={() => handleLeave(i)}
+                    >
+                      <span className="hover-circle" aria-hidden="true" ref={el => { circleRefs.current[i] = el; }} />
+                      <span className="label-stack">
+                        <span className="pill-label">{item.label}</span>
+                        <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
+                      </span>
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-        )}
 
-        <button
-          className="mobile-menu-button mobile-only"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-          ref={hamburgerRef}
-        >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-        </button>
-      </nav>
+          {/* Injected Action Node (e.g., Cart Button) */}
+          {actionNode && (
+            <div className="ml-2 mr-2 flex items-center h-full z-10">
+              {actionNode}
+            </div>
+          )}
 
+          <button
+            className="mobile-menu-button mobile-only z-10"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
+            ref={hamburgerRef}
+          >
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+          </button>
+        </nav>
+      </div>
+
+      {/* Popover Menu */}
       <div className="mobile-menu-popover mobile-only" ref={mobileMenuRef} style={cssVars}>
         <ul className="mobile-menu-list">
           {items.map((item, i) => (
